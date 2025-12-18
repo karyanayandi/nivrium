@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import { Check, Eraser, Gift, Heart, Lock, RefreshCw, Scissors, Star } from "lucide-react"
+import { Eraser, Gift, Heart, Lock, RefreshCw, Scissors, Star } from "lucide-react"
 
-import { PricingOption } from "@/types"
+import type { PricingOption } from "@/types"
 import { Accordion } from "./Accordion"
 
 const PRICING_OPTIONS: PricingOption[] = [
