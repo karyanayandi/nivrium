@@ -4,11 +4,20 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "check": "astro check",
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "astro": "astro",
+    "format:check": "prettier --check \"**/*.{astro,ts,tsx,mts,js,jsx,mjs,json,md}\"",
+    "format:write": "prettier --write \"**/*.{astro,ts,tsx,mts,js,jsx,mjs,json,md}\"",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.1",
+    "@astrojs/sitemap": "^3.6.0",
     "@astrojs/react": "^4.4.2",
     "@astrojs/tailwind": "^6.0.2",
     "astro": "^5.16.6",
@@ -19,6 +28,15 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-astro": "^1.5.0",
+    "prettier": "3.7.4",
+    "prettier-plugin-astro": "0.14.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "shadcn-svelte": "^1.1.0",
     "@types/node": "^22.14.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

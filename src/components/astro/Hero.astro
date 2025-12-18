@@ -1,43 +1,56 @@
 ---
-import { Star, ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Star } from "lucide-react"
 ---
 
-<section class="relative pt-16 pb-12 overflow-hidden bg-gradient-to-b from-blue-50/80 to-transparent">
-  <div class="max-w-4xl mx-auto px-4 text-center">
+<section
+  class="relative overflow-hidden bg-gradient-to-b from-blue-50/80 to-transparent pb-12 pt-16"
+>
+  <div class="mx-auto max-w-4xl px-4 text-center">
     <!-- Badge -->
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm mb-8 animate-fade-in-up">
-      <ShieldCheck className="text-primary w-4 h-4" />
-      <span class="text-xs font-medium text-slate-600 tracking-wide uppercase">90 Day Satisfaction Guarantee</span>
+    <div
+      class="animate-fade-in-up mb-8 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 shadow-sm"
+    >
+      <ShieldCheck className="h-4 w-4 text-primary" />
+      <span class="text-xs font-medium uppercase tracking-wide text-slate-600"
+        >90 Day Satisfaction Guarantee</span
+      >
     </div>
 
     <!-- Heading -->
-    <h1 class="font-display text-5xl md:text-7xl leading-[1.1] mb-6 text-slate-900">
+    <h1 class="mb-6 font-display text-5xl leading-[1.1] text-slate-900 md:text-7xl">
       Get Clear Skin <br />
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary font-serif italic pr-2">
+      <span
+        class="bg-gradient-to-r from-primary to-secondary bg-clip-text pr-2 font-serif italic text-transparent"
+      >
         Overnight
       </span>
     </h1>
 
-    <p class="text-lg md:text-xl text-slate-600 mb-8 max-w-2xl mx-auto font-light">
+    <p class="mx-auto mb-8 max-w-2xl text-lg font-light text-slate-600 md:text-xl">
       3x More Effective Than Patches • Flattens Acne & Scars Overnight
     </p>
 
     <!-- Social Proof -->
-    <div class="flex flex-col md:flex-row items-center justify-center gap-3 mb-10 text-sm md:text-base">
+    <div
+      class="mb-10 flex flex-col items-center justify-center gap-3 text-sm md:flex-row md:text-base"
+    >
       <div class="flex text-primary">
-        {[...Array(5)].map(() => (
-          <Star size={20} fill="currentColor" className="text-primary" />
-        ))}
+        {[...Array(5)].map(() => <Star size={20} fill="currentColor" className="text-primary" />)}
       </div>
       <div class="flex items-center gap-2">
         <span class="font-semibold text-slate-900">4.9 out of 5 stars</span>
         <span class="text-gray-400">•</span>
-        <span class="underline decoration-gray-300 underline-offset-4 cursor-pointer hover:text-primary transition-colors">1,842 Reviews</span>
+        <span
+          class="cursor-pointer underline decoration-gray-300 underline-offset-4 transition-colors hover:text-primary"
+          >1,842 Reviews</span
+        >
       </div>
     </div>
 
     <!-- CTA -->
-    <button class="bg-primary hover:bg-indigo-600 text-white font-bold py-4 px-12 rounded shadow-[0_10px_40px_-10px_rgba(93,95,239,0.5)] transition-all transform hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(93,95,239,0.4)] text-sm tracking-widest uppercase">
+    <button
+      class="transform rounded bg-primary px-12 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-[0_10px_40px_-10px_rgba(93,95,239,0.5)] transition-all hover:-translate-y-1 hover:bg-indigo-600 hover:shadow-[0_20px_40px_-10px_rgba(93,95,239,0.4)]"
+    >
       Get Clear Skin Now
     </button>
   </div>
