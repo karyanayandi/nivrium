@@ -1,21 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
-import { GraphQLClient } from "graphql-request"
 
-import {
-  ADD_CART_LINES_MUTATION,
-  CREATE_CART_MUTATION,
-  GET_CART_QUERY,
-  REMOVE_CART_LINES_MUTATION,
-  UPDATE_CART_LINES_MUTATION,
-} from "@/lib/shopify/queries/cart"
-import type {
-  CartCreateResponse,
-  CartLinesAddResponse,
-  CartLinesRemoveResponse,
-  CartLinesUpdateResponse,
-  CartQueryResponse,
-  ShopifyCart,
-} from "@/lib/shopify/types"
+import type { ShopifyCart } from "@/lib/shopify/types"
 
 const CART_ID_KEY = "shopify_cart_id"
 
@@ -37,16 +22,22 @@ interface CartContextType extends CartState {
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
-const getGraphQLClient = () => {
-  const domain = import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN
-  const token = import.meta.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
-
-  return new GraphQLClient(`https://${domain}/api/2024-01/graphql.json`, {
+// Helper function to make API calls to our server-side endpoints
+async function apiCall<T>(endpoint: string, body?: Record<string, unknown>): Promise<T> {
+  const response = await fetch(endpoint, {
+    method: "POST",
     headers: {
-      "X-Shopify-Storefront-Access-Token": token,
       "Content-Type": "application/json",
     },
+    body: body ? JSON.stringify(body) : undefined,
   })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: "API request failed" }))
+    throw new Error(error.error || "API request failed")
+  }
+
+  return response.json()
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -56,8 +47,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     error: null,
     isOpen: false,
   })
-
-  const client = getGraphQLClient()
 
   const setLoading = (loading: boolean) => {
     setState((prev) => ({ ...prev, loading }))
@@ -79,15 +68,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!cartId) return
 
     try {
-      const response = await client.request<CartQueryResponse>(GET_CART_QUERY, {
-        cartId,
-      })
-
-      if (response.cart) {
-        setCart(response.cart)
-      } else {
-        localStorage.removeItem(CART_ID_KEY)
-      }
+      // For now, we'll skip cart restoration until we implement a GET endpoint
+      // This is a low priority feature as carts are restored when users add items
+      // TODO: Add GET cart endpoint if needed
     } catch (error) {
       console.error("Error restoring cart:", error)
       localStorage.removeItem(CART_ID_KEY)
@@ -99,29 +82,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [restoreCart])
 
   const createCart = async (variantId: string, quantity: number): Promise<ShopifyCart> => {
-    const response = await client.request<CartCreateResponse>(CREATE_CART_MUTATION, {
-      input: {
-        lines: [
-          {
-            merchandiseId: variantId,
-            quantity,
-          },
-        ],
-      },
+    // For first item, we can just use addItem API which handles cart creation
+    const cart = await apiCall<ShopifyCart>("/api/cart/create", {})
+
+    // Now add the item to the newly created cart
+    const updatedCart = await apiCall<ShopifyCart>("/api/cart/add", {
+      cartId: cart.id,
+      merchandiseId: variantId,
+      quantity,
     })
 
-    if (response.cartCreate.userErrors.length > 0) {
-      throw new Error(response.cartCreate.userErrors[0].message)
-    }
-
-    if (!response.cartCreate.cart) {
-      throw new Error("Failed to create cart")
-    }
-
-    return response.cartCreate.cart
+    return updatedCart
   }
 
   const addItem = async (variantId: string, quantity: number) => {
+    console.log("Adding item to cart:", { variantId, quantity })
     setLoading(true)
     setError(null)
 
@@ -129,29 +104,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       let cart = state.cart
 
       if (!cart) {
+        console.log("Creating new cart...")
         cart = await createCart(variantId, quantity)
+        console.log("Cart created:", cart)
       } else {
-        const response = await client.request<CartLinesAddResponse>(ADD_CART_LINES_MUTATION, {
+        console.log("Adding to existing cart:", cart.id)
+        cart = await apiCall<ShopifyCart>("/api/cart/add", {
           cartId: cart.id,
-          lines: [
-            {
-              merchandiseId: variantId,
-              quantity,
-            },
-          ],
+          merchandiseId: variantId,
+          quantity,
         })
-
-        if (response.cartLinesAdd.userErrors.length > 0) {
-          throw new Error(response.cartLinesAdd.userErrors[0].message)
-        }
-
-        if (!response.cartLinesAdd.cart) {
-          throw new Error("Failed to add item to cart")
-        }
-
-        cart = response.cartLinesAdd.cart
+        console.log("Item added:", cart)
       }
 
+      console.log("Setting cart:", cart)
       setCart(cart)
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to add item to cart"
@@ -169,20 +135,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setError(null)
 
     try {
-      const response = await client.request<CartLinesRemoveResponse>(REMOVE_CART_LINES_MUTATION, {
+      const cart = await apiCall<ShopifyCart>("/api/cart/remove", {
         cartId: state.cart.id,
-        lineIds: [lineId],
+        lineId,
       })
 
-      if (response.cartLinesRemove.userErrors.length > 0) {
-        throw new Error(response.cartLinesRemove.userErrors[0].message)
-      }
-
-      if (!response.cartLinesRemove.cart) {
-        throw new Error("Failed to remove item from cart")
-      }
-
-      setCart(response.cartLinesRemove.cart)
+      setCart(cart)
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to remove item"
       setError(message)
@@ -199,25 +157,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setError(null)
 
     try {
-      const response = await client.request<CartLinesUpdateResponse>(UPDATE_CART_LINES_MUTATION, {
+      const cart = await apiCall<ShopifyCart>("/api/cart/update", {
         cartId: state.cart.id,
-        lines: [
-          {
-            id: lineId,
-            quantity,
-          },
-        ],
+        lineId,
+        quantity,
       })
 
-      if (response.cartLinesUpdate.userErrors.length > 0) {
-        throw new Error(response.cartLinesUpdate.userErrors[0].message)
-      }
-
-      if (!response.cartLinesUpdate.cart) {
-        throw new Error("Failed to update quantity")
-      }
-
-      setCart(response.cartLinesUpdate.cart)
+      setCart(cart)
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to update quantity"
       setError(message)

@@ -1,7 +1,10 @@
 import { GraphQLClient } from "graphql-request"
 
-const domain = import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN
-const storefrontAccessToken = import.meta.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
+// Use process.env for server-side API routes, import.meta.env for build-time
+const domain =
+  import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN || process.env.PUBLIC_SHOPIFY_STORE_DOMAIN
+const storefrontAccessToken =
+  import.meta.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN || process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
 
 if (!domain) {
   throw new Error("Missing required environment variable: PUBLIC_SHOPIFY_STORE_DOMAIN")
