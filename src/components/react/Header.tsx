@@ -24,30 +24,30 @@ export const Header: React.FC = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-2">
-            <a
-              href="#"
-              className="text-sm font-medium text-primary px-4 py-2 rounded-full bg-primary/5 border border-primary/10 transition-colors"
-            >
-              Hydrocolloid
-            </a>
-            <a
-              href="#"
-              className="text-sm font-medium text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-slate-50 transition-colors"
-            >
-              Tracking
-            </a>
-            <a
-              href="#"
-              className="text-sm font-medium text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-slate-50 transition-colors"
-            >
-              Support
-            </a>
-            <a
-              href="#"
-              className="text-sm font-medium text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-slate-50 transition-colors"
-            >
-              Manage Subscription
-            </a>
+            {/* <a */}
+            {/*   href="#" */}
+            {/*   className="text-sm font-medium text-primary px-4 py-2 rounded-full bg-primary/5 border border-primary/10 transition-colors" */}
+            {/* > */}
+            {/*   Hydrocolloid */}
+            {/* </a> */}
+            {/* <a */}
+            {/*   href="#" */}
+            {/*   className="text-sm font-medium text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-slate-50 transition-colors" */}
+            {/* > */}
+            {/*   Tracking */}
+            {/* </a> */}
+            {/* <a */}
+            {/*   href="#" */}
+            {/*   className="text-sm font-medium text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-slate-50 transition-colors" */}
+            {/* > */}
+            {/*   Support */}
+            {/* </a> */}
+            {/* <a */}
+            {/*   href="#" */}
+            {/*   className="text-sm font-medium text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-slate-50 transition-colors" */}
+            {/* > */}
+            {/*   Manage Subscription */}
+            {/* </a> */}
           </nav>
 
           {/* Actions */}

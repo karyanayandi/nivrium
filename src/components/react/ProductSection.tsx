@@ -172,91 +172,88 @@ export const ProductSection: React.FC<ProductSectionProps> = ({ product }) => {
             </div>
 
             {/* Free Gifts */}
-            <div className="mt-4">
-              <div className="flex items-center gap-2 mb-3 text-sm font-bold text-primary uppercase tracking-wide">
-                <Gift size={18} />
-                Free Gifts With Your Order
-              </div>
-
-              <div className="space-y-3">
-                {/* Gift 1 */}
-                <div className="flex items-center justify-between p-3 rounded-lg border border-primary bg-white shadow-sm relative overflow-hidden group">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 bg-orange-50 rounded-md flex-shrink-0 overflow-hidden border border-gray-100">
-                      <img
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqK068dwPAIvJyJ6Ce5pDQODLZZ8xXiwfis9drBWr7Q4o0779bewhrF69tSVj17BT2eGZJdsqK8hqI257eXDz8n4WQza6mCdAhwbXjsVEaTUK0ZCy7-HoZFK9rm4If8u56f7b6PnHQcWbR-WJJKRj4SjxEwWknLlWed9RU9IhyneIn-VgzhP86yafqs-BDdD2xFZqaFjxXwcnWuvsnYynTmaVKvfxs0rpo937BkT9D9c0vm3xtd_IiSJGYTLdvJJm9bC40sM816A"
-                        alt="Kit"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                      />
-                    </div>
-                    <div>
-                      <div className="font-bold text-slate-900 text-sm">Acne Remover Kit</div>
-                      <div className="text-xs text-slate-500 mt-0.5">
-                        Complete acne removal kit to enhance your skincare routine.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right pl-2">
-                    <div className="text-xs line-through text-slate-400 mb-0.5">$24</div>
-                    <div className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
-                      FREE
-                    </div>
-                  </div>
-                </div>
-
-                {/* Gift 2 */}
-                <div
-                  className={`
-                  flex items-center justify-between p-3 rounded-lg border transition-all duration-300
-                  ${
-                    isSerumLocked
-                      ? "border-gray-200 bg-gray-50 opacity-80"
-                      : "border-primary bg-white shadow-sm relative overflow-hidden"
-                  }
-                `}
-                >
-                  {!isSerumLocked && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-                  )}
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-14 h-14 bg-pink-50 rounded-md flex-shrink-0 overflow-hidden border border-gray-100 relative ${isSerumLocked ? "grayscale" : ""}`}
-                    >
-                      {isSerumLocked && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/10 z-10">
-                          <Lock size={16} className="text-white" />
-                        </div>
-                      )}
-                      <img
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2t6aT_lETDjorA-9uREJCLkD6OSKjLI-gYtr_EEYC04UWIQJxeo0lrIWDus-TBtMG07xIkjBYND-ov6lF2iL-bSnPJH_3Av26GCL4aE94Dn3awpkxvFM_jMFF-ZNJpjS2W89uoY7QGLy5Kr8k5JYd0qc-6I-cDt0LgQxC1Z4APD62bYe_jqEW6B6fi62_ubB7jT7FF635bk0dL8-BCy3RKIAJzFygfOfJdGegVz6ATL7DcoA9pFGntkyS-JJO8QLN1CZfdoXFHA"
-                        alt="Serum"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <div className="font-bold text-slate-900 text-sm">Niacinamide Serum</div>
-                      <div className="text-xs text-slate-500 mt-0.5">
-                        Premium niacinamide serum for brighter, clearer skin.
-                      </div>
-                      {isSerumLocked && (
-                        <div className="text-[10px] text-accent-red font-medium mt-1">
-                          Select 3 Rolls to unlock
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-right pl-2">
-                    <div className="text-xs line-through text-slate-400 mb-0.5">$49</div>
-                    <div
-                      className={`text-xs font-bold px-2 py-0.5 rounded ${isSerumLocked ? "text-slate-500 bg-slate-200" : "text-primary bg-primary/10"}`}
-                    >
-                      {isSerumLocked ? "LOCKED" : "FREE"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* <div className="mt-4"> */}
+            {/*   <div className="flex items-center gap-2 mb-3 text-sm font-bold text-primary uppercase tracking-wide"> */}
+            {/*     <Gift size={18} /> */}
+            {/*     Free Gifts With Your Order */}
+            {/*   </div> */}
+            {/**/}
+            {/*   <div className="space-y-3"> */}
+            {/*     <div className="flex items-center justify-between p-3 rounded-lg border border-primary bg-white shadow-sm relative overflow-hidden group"> */}
+            {/*       <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div> */}
+            {/*       <div className="flex items-center gap-3"> */}
+            {/*         <div className="w-14 h-14 bg-orange-50 rounded-md flex-shrink-0 overflow-hidden border border-gray-100"> */}
+            {/*           <img */}
+            {/*             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqK068dwPAIvJyJ6Ce5pDQODLZZ8xXiwfis9drBWr7Q4o0779bewhrF69tSVj17BT2eGZJdsqK8hqI257eXDz8n4WQza6mCdAhwbXjsVEaTUK0ZCy7-HoZFK9rm4If8u56f7b6PnHQcWbR-WJJKRj4SjxEwWknLlWed9RU9IhyneIn-VgzhP86yafqs-BDdD2xFZqaFjxXwcnWuvsnYynTmaVKvfxs0rpo937BkT9D9c0vm3xtd_IiSJGYTLdvJJm9bC40sM816A" */}
+            {/*             alt="Kit" */}
+            {/*             className="w-full h-full object-cover group-hover:scale-110 transition-transform" */}
+            {/*           /> */}
+            {/*         </div> */}
+            {/*         <div> */}
+            {/*           <div className="font-bold text-slate-900 text-sm">Acne Remover Kit</div> */}
+            {/*           <div className="text-xs text-slate-500 mt-0.5"> */}
+            {/*             Complete acne removal kit to enhance your skincare routine. */}
+            {/*           </div> */}
+            {/*         </div> */}
+            {/*       </div> */}
+            {/*       <div className="text-right pl-2"> */}
+            {/*         <div className="text-xs line-through text-slate-400 mb-0.5">$24</div> */}
+            {/*         <div className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded"> */}
+            {/*           FREE */}
+            {/*         </div> */}
+            {/*       </div> */}
+            {/*     </div> */}
+            {/*     <div */}
+            {/*       className={` */}
+            {/*       flex items-center justify-between p-3 rounded-lg border transition-all duration-300 */}
+            {/*       ${ */}
+            {/*         isSerumLocked */}
+            {/*           ? "border-gray-200 bg-gray-50 opacity-80" */}
+            {/*           : "border-primary bg-white shadow-sm relative overflow-hidden" */}
+            {/*       } */}
+            {/*     `} */}
+            {/*     > */}
+            {/*       {!isSerumLocked && ( */}
+            {/*         <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div> */}
+            {/*       )} */}
+            {/*       <div className="flex items-center gap-3"> */}
+            {/*         <div */}
+            {/*           className={`w-14 h-14 bg-pink-50 rounded-md flex-shrink-0 overflow-hidden border border-gray-100 relative ${isSerumLocked ? "grayscale" : ""}`} */}
+            {/*         > */}
+            {/*           {isSerumLocked && ( */}
+            {/*             <div className="absolute inset-0 flex items-center justify-center bg-black/10 z-10"> */}
+            {/*               <Lock size={16} className="text-white" /> */}
+            {/*             </div> */}
+            {/*           )} */}
+            {/*           <img */}
+            {/*             src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2t6aT_lETDjorA-9uREJCLkD6OSKjLI-gYtr_EEYC04UWIQJxeo0lrIWDus-TBtMG07xIkjBYND-ov6lF2iL-bSnPJH_3Av26GCL4aE94Dn3awpkxvFM_jMFF-ZNJpjS2W89uoY7QGLy5Kr8k5JYd0qc-6I-cDt0LgQxC1Z4APD62bYe_jqEW6B6fi62_ubB7jT7FF635bk0dL8-BCy3RKIAJzFygfOfJdGegVz6ATL7DcoA9pFGntkyS-JJO8QLN1CZfdoXFHA" */}
+            {/*             alt="Serum" */}
+            {/*             className="w-full h-full object-cover" */}
+            {/*           /> */}
+            {/*         </div> */}
+            {/*         <div> */}
+            {/*           <div className="font-bold text-slate-900 text-sm">Niacinamide Serum</div> */}
+            {/*           <div className="text-xs text-slate-500 mt-0.5"> */}
+            {/*             Premium niacinamide serum for brighter, clearer skin. */}
+            {/*           </div> */}
+            {/*           {isSerumLocked && ( */}
+            {/*             <div className="text-[10px] text-accent-red font-medium mt-1"> */}
+            {/*               Select 3 Rolls to unlock */}
+            {/*             </div> */}
+            {/*           )} */}
+            {/*         </div> */}
+            {/*       </div> */}
+            {/*       <div className="text-right pl-2"> */}
+            {/*         <div className="text-xs line-through text-slate-400 mb-0.5">$49</div> */}
+            {/*         <div */}
+            {/*           className={`text-xs font-bold px-2 py-0.5 rounded ${isSerumLocked ? "text-slate-500 bg-slate-200" : "text-primary bg-primary/10"}`} */}
+            {/*         > */}
+            {/*           {isSerumLocked ? "LOCKED" : "FREE"} */}
+            {/*         </div> */}
+            {/*       </div> */}
+            {/*     </div> */}
+            {/*   </div> */}
+            {/* </div> */}
 
             {/* Total and CTA */}
             <div className="mt-4 pt-6 border-t border-gray-200">
