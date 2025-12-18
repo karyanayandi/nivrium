@@ -77,7 +77,7 @@ export const ProductSection: React.FC<ProductSectionProps> = ({ product }) => {
   }
 
   return (
-    <section className="py-16 bg-surface-light">
+    <section id="product" className="py-16 bg-surface-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Left Column: Image */}
