@@ -59,15 +59,9 @@ export const ProductSection: React.FC<ProductSectionProps> = ({ product }) => {
       return
     }
 
-    console.log("Add to cart clicked:", {
-      variantId: selectedOption.shopifyVariantId,
-      optionLabel: selectedOption.label,
-    })
-
     setAddingToCart(true)
     try {
       await addItem(selectedOption.shopifyVariantId, 1)
-      console.log("Item successfully added, opening cart sidebar")
       openCart()
     } catch (error) {
       console.error("Error adding to cart:", error)

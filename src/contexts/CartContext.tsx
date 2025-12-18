@@ -82,15 +82,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [restoreCart])
 
   const createCart = async (variantId: string, quantity: number): Promise<ShopifyCart> => {
-    console.log("Creating new cart...")
     const cart = await apiCall<ShopifyCart>("/api/cart/create", {})
 
     if (!cart || !cart.id) {
       throw new Error("Cart creation failed: No cart ID returned")
     }
-
-    console.log("Cart created successfully:", cart.id)
-    console.log("Adding item to new cart:", { cartId: cart.id, merchandiseId: variantId, quantity })
 
     const updatedCart = await apiCall<ShopifyCart>("/api/cart/add", {
       cartId: cart.id,
@@ -106,7 +102,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   const addItem = async (variantId: string, quantity: number) => {
-    console.log("Adding item to cart:", { variantId, quantity })
     setLoading(true)
     setError(null)
 
@@ -118,25 +113,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       let cart = state.cart
 
       if (!cart) {
-        console.log("No existing cart, creating new cart...")
         cart = await createCart(variantId, quantity)
-        console.log("Cart created and item added:", cart.id)
       } else {
-        console.log("Adding to existing cart:", cart.id)
-        console.log("Request details:", { cartId: cart.id, merchandiseId: variantId, quantity })
         cart = await apiCall<ShopifyCart>("/api/cart/add", {
           cartId: cart.id,
           merchandiseId: variantId,
           quantity,
         })
-        console.log("Item added to cart:", cart.id, "Total quantity:", cart.totalQuantity)
       }
 
       if (!cart || !cart.id) {
         throw new Error("Cart operation succeeded but cart object is invalid")
       }
 
-      console.log("Setting cart state with", cart.totalQuantity, "items")
       setCart(cart)
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to add item to cart"
@@ -173,8 +162,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = async (lineId: string, quantity: number) => {
     if (!state.cart) return
 
-    console.log("Updating quantity:", { lineId, quantity, currentCart: state.cart.id })
-
     setLoading(true)
     setError(null)
 
@@ -185,7 +172,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         quantity,
       })
 
-      console.log("Quantity updated successfully. New total:", cart.totalQuantity)
       setCart(cart)
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to update quantity"

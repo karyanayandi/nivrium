@@ -9,12 +9,6 @@ export const POST: APIRoute = async () => {
     const domain = import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN
     const token = import.meta.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
 
-    console.log("Environment check:", {
-      hasDomain: !!domain,
-      hasToken: !!token,
-      domain: domain ? `${domain.substring(0, 10)}...` : "missing",
-    })
-
     if (!domain || !token) {
       console.error("Missing Shopify credentials:", { domain: !!domain, token: !!token })
       return new Response(
@@ -38,7 +32,6 @@ export const POST: APIRoute = async () => {
       },
     })
 
-    console.log("Creating cart with Shopify API...")
     const response = await client.request<CartCreateResponse>(CREATE_CART_MUTATION, {
       input: {},
     })
@@ -75,7 +68,6 @@ export const POST: APIRoute = async () => {
       )
     }
 
-    console.log("Cart created successfully:", response.cartCreate.cart.id)
     return new Response(JSON.stringify(response.cartCreate.cart), {
       status: 200,
       headers: {

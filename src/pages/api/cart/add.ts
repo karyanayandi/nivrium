@@ -8,8 +8,6 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const { cartId, merchandiseId, quantity } = await request.json()
 
-    console.log("Add to cart request:", { cartId, merchandiseId, quantity })
-
     if (!cartId || !merchandiseId) {
       console.error("Missing required fields:", {
         cartId: !!cartId,
@@ -53,7 +51,6 @@ export const POST: APIRoute = async ({ request }) => {
       },
     })
 
-    console.log("Adding item to cart via Shopify API...")
     const response = await client.request<CartLinesAddResponse>(ADD_CART_LINES_MUTATION, {
       cartId,
       lines: [
@@ -96,7 +93,6 @@ export const POST: APIRoute = async ({ request }) => {
       )
     }
 
-    console.log("Item added successfully to cart:", response.cartLinesAdd.cart.id)
     return new Response(JSON.stringify(response.cartLinesAdd.cart), {
       status: 200,
       headers: {
