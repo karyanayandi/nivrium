@@ -3,23 +3,37 @@ import Features from "@/components/astro/Features.astro"
 import Footer from "@/components/astro/Footer.astro"
 import Guarantee from "@/components/astro/Guarantee.astro"
 import Hero from "@/components/astro/Hero.astro"
-import { Header } from "@/components/react/Header"
-import { ProductSection } from "@/components/react/ProductSection"
+import { AppShell } from "@/components/react/AppShell"
 import BaseLayout from "@/layouts/BaseLayout.astro"
+import { env, validateRequiredEnv } from "@/lib/env"
+import { getProduct } from "@/lib/shopify/products"
+
+validateRequiredEnv()
+
+const product = await getProduct(env.shopify.productHandle)
+
+if (!product) {
+  throw new Error(
+    `Product with handle "${env.shopify.productHandle}" not found. Please check your SHOPIFY_PRODUCT_HANDLE environment variable.`,
+  )
+}
+
+const saleBannerText = env.sale.bannerText
 ---
 
 <BaseLayout>
   <div class="flex min-h-screen flex-col font-sans">
-    <Header client:load />
+    <AppShell product={product} client:only="react" />
     <main class="flex-grow">
       <Hero />
-      <div
-        class="bg-accent-red py-3 text-center text-sm font-bold tracking-wide text-white uppercase"
-      >
-        Holiday Sale - 50% Off
-      </div>
+      {
+        saleBannerText && (
+          <div class="bg-accent-red py-3 text-center text-sm font-bold tracking-wide text-white uppercase">
+            {saleBannerText}
+          </div>
+        )
+      }
       <Features />
-      <ProductSection client:load />
       <Guarantee />
     </main>
     <Footer />

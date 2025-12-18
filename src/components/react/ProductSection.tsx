@@ -1,46 +1,74 @@
 import React, { useState } from "react"
 import { Eraser, Gift, Heart, Lock, RefreshCw, Scissors, Star } from "lucide-react"
 
-import type { PricingOption } from "@/types"
+import { useCart } from "@/contexts/CartContext"
+import type { PricingOption, Product } from "@/types"
 import { Accordion } from "./Accordion"
 
-const PRICING_OPTIONS: PricingOption[] = [
-  {
-    id: 1,
-    label: "1 Roll",
-    pricePerUnit: 30.0,
-    totalPrice: 30.0,
-    originalPrice: 60.0,
-    count: 1,
-  },
-  {
-    id: 2,
-    label: "2 Rolls",
-    pricePerUnit: 26.0,
-    totalPrice: 52.0,
-    originalPrice: 144.0, // Matching the screenshot's specific math
-    isPopular: true,
-    count: 2,
-  },
-  {
-    id: 3,
-    label: "3 Rolls",
-    pricePerUnit: 23.0,
-    totalPrice: 69.0,
-    originalPrice: 216.0,
-    isBestValue: true,
-    count: 3,
-  },
-]
+interface ProductSectionProps {
+  product: Product
+}
 
-export const ProductSection: React.FC = () => {
-  const [selectedOptionId, setSelectedOptionId] = useState<number>(2)
+function extractCountFromTitle(title: string): number {
+  const match = title.match(/(\d+)\s*(Roll|roll)/)
+  return match ? parseInt(match[1], 10) : 1
+}
 
-  const selectedOption =
-    PRICING_OPTIONS.find((o) => o.id === selectedOptionId) || PRICING_OPTIONS[1]
+function transformVariantToPricingOption(
+  variant: any,
+  index: number,
+  allVariants: any[],
+): PricingOption {
+  const count = extractCountFromTitle(variant.title)
 
-  // Serum unlocks if 3 rolls are selected, just to add some logic interaction
+  return {
+    id: index + 1,
+    label: variant.title,
+    pricePerUnit: count > 0 ? variant.price / count : variant.price,
+    totalPrice: variant.price,
+    originalPrice: variant.compareAtPrice || variant.price * 2,
+    count,
+    shopifyVariantId: variant.id,
+    isPopular: index === 1 && allVariants.length === 3,
+    isBestValue: index === 2 && allVariants.length === 3,
+  }
+}
+
+export const ProductSection: React.FC<ProductSectionProps> = ({ product }) => {
+  const { addItem, openCart, loading } = useCart()
+
+  const pricingOptions = product.variants.map((variant, index) =>
+    transformVariantToPricingOption(variant, index, product.variants),
+  )
+
+  const [selectedOptionId, setSelectedOptionId] = useState<number>(
+    pricingOptions.find((o) => o.isPopular)?.id || 1,
+  )
+  const [addingToCart, setAddingToCart] = useState(false)
+
+  const selectedOption = pricingOptions.find((o) => o.id === selectedOptionId) || pricingOptions[0]
+
   const isSerumLocked = selectedOption.count < 3
+
+  const productImage = product.images[0]?.url || "https://via.placeholder.com/400"
+  const productImageAlt = product.images[0]?.altText || product.title
+
+  const handleAddToCart = async () => {
+    if (!selectedOption.shopifyVariantId) {
+      console.error("No variant ID found for selected option")
+      return
+    }
+
+    setAddingToCart(true)
+    try {
+      await addItem(selectedOption.shopifyVariantId, 1)
+      openCart()
+    } catch (error) {
+      console.error("Error adding to cart:", error)
+    } finally {
+      setAddingToCart(false)
+    }
+  }
 
   return (
     <section className="py-16 bg-surface-light">
@@ -52,8 +80,8 @@ export const ProductSection: React.FC = () => {
               <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-8 flex items-center justify-center aspect-square lg:aspect-[4/5] relative">
                 <div className="absolute inset-0 bg-blue-50/50 rounded-xl transform -rotate-1 scale-95 opacity-50 z-0"></div>
                 <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAauxsLP6Z623L9DW56qXm_Z9szZFss2bjV2ltVfolv93NMMigUIZVq1d9ZxIwDLbbjtwbuwqW8MGl7zuX2izVKKrUEs9QrrL_GGze7dQdEU6Lc0GVfwPCG_xW8j5T7jjCgGJeOmlJCLJr_wTL0A6P5sVGHtjztlGIeLyV7y-hwo1DVj8cH7E72prDzG5BxpjcXGn1lALFSmTh_bJh-Bwxa9QT6xgutgHP-uQpb9JXX8DzMa2_OE_WTFlbsUpZbMo_LQ_FtgjIC1Q"
-                  alt="Hydrocolloid Treatment Box and Roll"
+                  src={productImage}
+                  alt={productImageAlt}
                   className="relative z-10 w-full h-full object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -65,12 +93,9 @@ export const ProductSection: React.FC = () => {
             {/* Header Info */}
             <div>
               <h2 className="font-display text-4xl lg:text-5xl text-slate-900 mb-4 leading-tight">
-                Hydrocolloid Treatment
+                {product.title}
               </h2>
-              <p className="text-slate-600 text-lg leading-relaxed">
-                Get clearer, smoother, and acne-free skin overnight without breaking the bank. Are
-                you ready to look your best?
-              </p>
+              <p className="text-slate-600 text-lg leading-relaxed">{product.description}</p>
             </div>
 
             {/* Ratings */}
@@ -103,7 +128,7 @@ export const ProductSection: React.FC = () => {
 
             {/* Pricing Selector */}
             <div className="grid grid-cols-3 gap-3">
-              {PRICING_OPTIONS.map((option) => (
+              {pricingOptions.map((option) => (
                 <button
                   key={option.id}
                   onClick={() => setSelectedOptionId(option.id)}
@@ -241,8 +266,12 @@ export const ProductSection: React.FC = () => {
                 </span>
               </div>
 
-              <button className="w-full bg-primary hover:bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-1 active:scale-[0.98] text-lg tracking-wide uppercase flex items-center justify-center gap-2">
-                <span>Add to Cart</span>
+              <button
+                onClick={handleAddToCart}
+                disabled={addingToCart || loading}
+                className="w-full bg-primary hover:bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-1 active:scale-[0.98] text-lg tracking-wide uppercase flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                <span>{addingToCart ? "Adding..." : "Add to Cart"}</span>
               </button>
 
               <div className="flex items-center justify-center gap-2 mt-4 text-xs text-slate-500 font-medium">

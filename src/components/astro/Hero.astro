@@ -1,5 +1,13 @@
 ---
 import { ShieldCheck, Star } from "lucide-react"
+
+import { env } from "@/lib/env"
+
+const heroTitle = env.hero.title
+const heroSubtitle = env.hero.subtitle
+const guaranteeDays = env.hero.guaranteeDays
+const productRating = env.hero.productRating
+const reviewCount = env.hero.reviewCount
 ---
 
 <section
@@ -12,22 +20,17 @@ import { ShieldCheck, Star } from "lucide-react"
     >
       <ShieldCheck className="text-primary h-4 w-4" />
       <span class="text-xs font-medium tracking-wide text-slate-600 uppercase"
-        >90 Day Satisfaction Guarantee</span
+        >{guaranteeDays} Day Satisfaction Guarantee</span
       >
     </div>
 
     <!-- Heading -->
     <h1 class="font-display mb-6 text-5xl leading-[1.1] text-slate-900 md:text-7xl">
-      Get Clear Skin <br />
-      <span
-        class="from-primary to-secondary bg-gradient-to-r bg-clip-text pr-2 font-serif text-transparent italic"
-      >
-        Overnight
-      </span>
+      {heroTitle}
     </h1>
 
     <p class="mx-auto mb-8 max-w-2xl text-lg font-light text-slate-600 md:text-xl">
-      3x More Effective Than Patches • Flattens Acne & Scars Overnight
+      {heroSubtitle}
     </p>
 
     <!-- Social Proof -->
@@ -38,11 +41,11 @@ import { ShieldCheck, Star } from "lucide-react"
         {[...Array(5)].map(() => <Star size={20} fill="currentColor" className="text-primary" />)}
       </div>
       <div class="flex items-center gap-2">
-        <span class="font-semibold text-slate-900">4.9 out of 5 stars</span>
+        <span class="font-semibold text-slate-900">{productRating} out of 5 stars</span>
         <span class="text-gray-400">•</span>
         <span
           class="hover:text-primary cursor-pointer underline decoration-gray-300 underline-offset-4 transition-colors"
-          >1,842 Reviews</span
+          >{reviewCount.toLocaleString()} Reviews</span
         >
       </div>
     </div>

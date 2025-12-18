@@ -1,11 +1,17 @@
 ---
 import "@/styles/global.css"
 
+import { env } from "@/lib/env"
+
 interface Props {
   title?: string
+  description?: string
 }
 
-const { title = "LIFARA - Hydrocolloid Treatment" } = Astro.props
+const { title = env.site.title, description = env.site.description } = Astro.props
+
+const siteUrl = env.site.url
+const ogImage = env.site.ogImage
 ---
 
 <!doctype html>
@@ -14,6 +20,19 @@ const { title = "LIFARA - Hydrocolloid Treatment" } = Astro.props
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {siteUrl && <meta property="og:url" content={siteUrl} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    {env.social.twitter && <meta name="twitter:site" content={env.social.twitter} />}
 
     <!-- Google Fonts Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -1,8 +1,15 @@
 import React, { useState } from "react"
 import { Menu, ShoppingBag, X } from "lucide-react"
 
+import { useCart } from "@/contexts/CartContext"
+import { env } from "@/lib/env"
+
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { getCartCount, openCart } = useCart()
+
+  const cartCount = getCartCount()
+  const brandName = env.branding.name
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all duration-300">
@@ -11,7 +18,7 @@ export const Header: React.FC = () => {
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <span className="font-display font-bold text-2xl tracking-tight text-slate-900">
-              LIFARA
+              {brandName}
             </span>
           </div>
 
@@ -45,9 +52,17 @@ export const Header: React.FC = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            <button className="text-slate-600 hover:text-primary p-2 rounded-full hover:bg-slate-100 transition-colors relative">
+            <button
+              onClick={openCart}
+              className="text-slate-600 hover:text-primary p-2 rounded-full hover:bg-slate-100 transition-colors relative"
+              aria-label="Open shopping cart"
+            >
               <ShoppingBag size={22} />
-              <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center ring-2 ring-white">
+                  {cartCount}
+                </span>
+              )}
             </button>
             <button
               className="md:hidden text-slate-600 p-2"
