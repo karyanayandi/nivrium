@@ -173,6 +173,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = async (lineId: string, quantity: number) => {
     if (!state.cart) return
 
+    console.log("Updating quantity:", { lineId, quantity, currentCart: state.cart.id })
+
     setLoading(true)
     setError(null)
 
@@ -183,6 +185,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         quantity,
       })
 
+      console.log("Quantity updated successfully. New total:", cart.totalQuantity)
       setCart(cart)
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to update quantity"

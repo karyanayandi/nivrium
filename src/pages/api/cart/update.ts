@@ -8,6 +8,8 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const { cartId, lineId, quantity } = await request.json()
 
+    console.log("Update cart request:", { cartId, lineId, quantity })
+
     if (!cartId || !lineId || quantity === undefined) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
         status: 400,
@@ -45,6 +47,33 @@ export const POST: APIRoute = async ({ request }) => {
         },
       ],
     })
+
+    console.log("Cart updated successfully:", response.cartLinesUpdate.cart?.totalQuantity, "items")
+
+    if (response.cartLinesUpdate.userErrors && response.cartLinesUpdate.userErrors.length > 0) {
+      console.error("Shopify user errors:", response.cartLinesUpdate.userErrors)
+      return new Response(
+        JSON.stringify({
+          error: response.cartLinesUpdate.userErrors[0].message,
+          userErrors: response.cartLinesUpdate.userErrors,
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+    }
+
+    if (!response.cartLinesUpdate.cart) {
+      return new Response(JSON.stringify({ error: "Cart update failed" }), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    }
 
     return new Response(JSON.stringify(response.cartLinesUpdate.cart), {
       status: 200,
