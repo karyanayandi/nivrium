@@ -1,3 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Custom Colors */
+  --color-primary: #5d5fef;
+  --color-secondary: #818cf8;
+  --color-surface-light: #f8fafc;
+  --color-surface-dark: #0f172a;
+  --color-accent-red: #dc2626;
+
+  /* Custom Font Families */
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+}
