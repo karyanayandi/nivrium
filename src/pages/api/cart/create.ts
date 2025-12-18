@@ -6,7 +6,6 @@ import type { CartCreateResponse } from "../../../lib/shopify/types"
 
 export const POST: APIRoute = async () => {
   try {
-    // Access env variables directly in the route
     const domain = import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN
     const token = import.meta.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
 
@@ -17,9 +16,10 @@ export const POST: APIRoute = async () => {
     })
 
     if (!domain || !token) {
+      console.error("Missing Shopify credentials:", { domain: !!domain, token: !!token })
       return new Response(
         JSON.stringify({
-          error: "Missing Shopify credentials",
+          error: "Missing Shopify credentials. Please check environment configuration.",
           details: `domain: ${!!domain}, token: ${!!token}`,
         }),
         {
@@ -38,10 +38,44 @@ export const POST: APIRoute = async () => {
       },
     })
 
+    console.log("Creating cart with Shopify API...")
     const response = await client.request<CartCreateResponse>(CREATE_CART_MUTATION, {
       input: {},
     })
 
+    if (response.cartCreate.userErrors && response.cartCreate.userErrors.length > 0) {
+      console.error("Shopify cart creation userErrors:", response.cartCreate.userErrors)
+      return new Response(
+        JSON.stringify({
+          error: "Cart creation failed",
+          details: response.cartCreate.userErrors.map((e) => e.message).join(", "),
+          userErrors: response.cartCreate.userErrors,
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+    }
+
+    if (!response.cartCreate.cart) {
+      console.error("Cart creation returned null cart object")
+      return new Response(
+        JSON.stringify({
+          error: "Cart creation returned null. Please check Shopify store configuration.",
+        }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      )
+    }
+
+    console.log("Cart created successfully:", response.cartCreate.cart.id)
     return new Response(JSON.stringify(response.cartCreate.cart), {
       status: 200,
       headers: {
@@ -57,7 +91,7 @@ export const POST: APIRoute = async () => {
     return new Response(
       JSON.stringify({
         error: errorMessage,
-        details: process.env.NODE_ENV === "development" ? errorDetails : undefined,
+        details: import.meta.env.DEV ? errorDetails : undefined,
       }),
       {
         status: 500,

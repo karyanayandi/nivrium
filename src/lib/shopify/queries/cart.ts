@@ -37,7 +37,6 @@ export const CART_LINE_FRAGMENT = gql`
 
 export const CART_FRAGMENT = gql`
   ${CART_LINE_FRAGMENT}
-  ${MONEY_FRAGMENT}
   fragment CartFragment on Cart {
     id
     checkoutUrl
